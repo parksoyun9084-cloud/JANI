@@ -61,3 +61,45 @@ def transform_preprocessor(data, encoders, scaler):
     )
 
     return data_scaled
+
+
+
+
+def rfm_df_preprocessing(csv_root):
+    model_df = pd.read_csv(csv_root)
+
+    rfm_df = model_df.assign(
+        activity_score = model_df["notifications_clicked"],
+        adjusted_frequency = model_df["weekly_songs_played"] * (1 - model_df["song_skip_rate"]),
+        Monetary = model_df["weekly_hours"],
+        Engagement = (
+            model_df["num_playlists_created"] +
+            model_df["num_platform_friends"] +
+            model_df["num_shared_playlists"]
+        ),
+        subscription_risk = model_df["num_subscription_pauses"],
+        support_pressure = model_df["customer_service_inquiries"]
+    )[[
+        "activity_score",
+        "adjusted_frequency",
+        "Monetary",
+        "Engagement",
+        "subscription_risk",
+        "support_pressure"
+    ]]
+
+    mapping = {
+        "Low": 0,
+        "Medium": 1,
+        "High": 2,
+    }
+
+    rfm_df['support_pressure'] = rfm_df['support_pressure'].map(mapping)
+
+
+    scaler = StandardScaler()
+
+    rfm_scaled_df = scaler.fit_transform(rfm_df)
+    rfm_scaled_df = pd.DataFrame(rfm_scaled_df, columns=rfm_df.columns, index=rfm_df.index)
+
+    return rfm_df, rfm_scaled_df
