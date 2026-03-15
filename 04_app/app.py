@@ -26,7 +26,7 @@ project_root = os.path.abspath(os.path.join(current_dir, '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from src.clustering import make_rfm_table()
+from src.clustering import make_rfm_table
 
 # ---------------------------------------------------------
 # 1. 페이지 설정 및 맑은 핑크 CSS
