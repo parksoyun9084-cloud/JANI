@@ -27,7 +27,7 @@ project_root = os.path.abspath(os.path.join(current_dir, '..'))
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
-from src.preprocessing import rfm_df_preprocessing
+from src.clustering import make_rfm_table
 
 # ---------------------------------------------------------
 # 1. 페이지 설정 및 맑은 핑크 CSS
@@ -117,7 +117,7 @@ def load_data():
         st.error(f"🚨 파일을 찾을 수 없습니다: `{file_path}`")
         st.stop()
 
-    rfm_df, rfm_scaled_df = rfm_df_preprocessing(file_path)
+    rfm_df, rfm_scaled_df = make_rfm_table(file_path)
 
     model_df = pd.read_csv(file_path)
     if 'churned' in model_df.columns:
